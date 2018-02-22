@@ -87,8 +87,8 @@ RUN cd /opt \
 
 ENV PATH=$PATH:/opt/flutter/bin
 
-RUN apt-get clean
+RUN flutter doctor --android-licenses
 
-#RUN flutter doctor --android-licenses
+RUN apt-get clean
 
 VOLUME ["/opt/android-sdk-linux"]
