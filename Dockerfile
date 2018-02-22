@@ -21,6 +21,9 @@ RUN add-apt-repository ppa:cwchien/gradle -y \
   && apt-get update -qq \
   && apt-get install -y gradle \
   && gradle -v
+ 
+# Unzip
+RUN apt-get install unzip -y
 
 # Download Android SDK tools into $ANDROID_SDK_HOME
 RUN useradd -u 1000 -M -s /bin/bash android
@@ -30,14 +33,21 @@ USER android
 ENV ANDROID_SDK_HOME /opt/android-sdk-linux
 ENV ANDROID_HOME /opt/android-sdk-linux
 
-RUN cd /opt && wget -q https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz -O android-sdk.tgz
-RUN cd /opt && tar -xvzf android-sdk.tgz
-RUN cd /opt && rm -f android-sdk.tgz
+RUN cd /opt && wget -q https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip -O android-sdk.zip
+RUN cd /opt && unzip android-sdk.zip -d ${ANDROID_SDK_HOME}
+RUN cd /opt && rm -f android-sdk.zip
 
-ENV PATH ${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/tools/bin:${ANDROID_SDK_HOME}/platform-tools:/opt/tools
+#RUN cd /opt && wget -q https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz -O android-sdk.tgz
+#RUN cd /opt && tar -xvzf android-sdk.tgz
+#RUN cd /opt && rm -f android-sdk.tgz
+
+ENV PATH ${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/platform-tools:/opt/tools
 
 
 # Install Android SDKs and other build packages
+RUN ${ANDROID_SDK_HOME}/tools/bin/sdkmanager --update
+RUN ${ANDROID_SDK_HOME}/tools/bin/sdkmanager "platforms;android-27" "build-tools;27.0.3" "system-images;android-25;google_apis;armeabi-v7a" "extras;google;m2repository" "extras;android;m2repository"
+RUN ${ANDROID_SDK_HOME}/tools/bin/sdkmanager --licenses
 
 # Other tools and resources of Android SDK
 #  you should only install the packages you need!
@@ -46,28 +56,28 @@ ENV PATH ${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/tools/bin:${ANDRO
 # (!!!) Only install one package at a time, as "echo y" will only work for one license!
 #       If you don't do it this way you might get "Unknown response" in the logs,
 #         but the android SDK tool **won't** fail, it'll just **NOT** install the package.
-RUN echo y | android update sdk --no-ui --all --filter platform-tools | grep 'package installed'
+#RUN echo y | android update sdk --no-ui --all --filter platform-tools | grep 'package installed'
 #RUN echo y | android update sdk --no-ui --all --filter extra-android-support | grep 'package installed'
 
 # SDKs
 # Please keep these in descending order!
-RUN echo y | sdkmanager "platforms;android-27" | grep 'done'
+#RUN echo y | sdkmanager "platforms;android-27" | grep 'done'
 #RUN echo y | android update sdk --no-ui --all --filter android-27 | grep 'package installed'
 
 # build tools
 # Please keep these in descending order!
-RUN echo y | android update sdk --no-ui --all --filter build-tools-27.0.3 | grep 'package installed'
+#RUN echo y | android update sdk --no-ui --all --filter build-tools-27.0.3 | grep 'package installed'
 
 # Android System Images, for emulators
 # Please keep these in descending order!
 #RUN echo y | android update sdk --no-ui --all --filter sys-img-x86_64-android-25 | grep 'package installed'
 #RUN echo y | android update sdk --no-ui --all --filter sys-img-x86-android-25 | grep 'package installed'
 #RUN echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-25 | grep 'package installed'
-RUN echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-google_apis-25 | grep 'package installed'
+#RUN echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-google_apis-25 | grep 'package installed'
 
 # Extras
-RUN echo y | android update sdk --no-ui --all --filter extra-android-m2repository | grep 'package installed'
-RUN echo y | android update sdk --no-ui --all --filter extra-google-m2repository | grep 'package installed'
+#RUN echo y | android update sdk --no-ui --all --filter extra-android-m2repository | grep 'package installed'
+#RUN echo y | android update sdk --no-ui --all --filter extra-google-m2repository | grep 'package installed'
 
 #RUN yes | sdkmanager --licenses
 
@@ -78,7 +88,7 @@ COPY tools /opt/tools
 COPY licenses ${ANDROID_SDK_HOME}/licenses
 
 # Update SDK
-RUN /opt/tools/android-accept-licenses.sh android update sdk --no-ui --obsolete --force
+#RUN /opt/tools/android-accept-licenses.sh android update sdk --no-ui --obsolete --force
 
 USER root
 
