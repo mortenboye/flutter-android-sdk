@@ -34,7 +34,7 @@ RUN cd /opt && wget -q https://dl.google.com/android/android-sdk_r24.4.1-linux.t
 RUN cd /opt && tar -xvzf android-sdk.tgz
 RUN cd /opt && rm -f android-sdk.tgz
 
-ENV PATH ${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/platform-tools:/opt/tools
+ENV PATH ${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/tools/bin:${ANDROID_SDK_HOME}/platform-tools:/opt/tools
 
 
 # Install Android SDKs and other build packages
@@ -51,7 +51,8 @@ RUN echo y | android update sdk --no-ui --all --filter platform-tools | grep 'pa
 
 # SDKs
 # Please keep these in descending order!
-RUN echo y | android update sdk --no-ui --all --filter android-27# | grep 'package installed'
+RUN echo y | sdkmanager "platforms;android-27" | grep 'done'
+#RUN echo y | android update sdk --no-ui --all --filter android-27 | grep 'package installed'
 
 # build tools
 # Please keep these in descending order!
