@@ -51,11 +51,11 @@ RUN echo y | android update sdk --no-ui --all --filter platform-tools | grep 'pa
 
 # SDKs
 # Please keep these in descending order!
-RUN echo y | android update sdk --no-ui --all --filter android-25 | grep 'package installed'
+RUN echo y | android update sdk --no-ui --all --filter android-27 | grep 'package installed'
 
 # build tools
 # Please keep these in descending order!
-RUN echo y | android update sdk --no-ui --all --filter build-tools-25.0.3 | grep 'package installed'
+RUN echo y | android update sdk --no-ui --all --filter build-tools-27.0.3 | grep 'package installed'
 
 # Android System Images, for emulators
 # Please keep these in descending order!
@@ -87,7 +87,7 @@ RUN cd /opt \
 
 ENV PATH=$PATH:/opt/flutter/bin
 
-RUN flutter doctor --android-licenses
+RUN echo y | flutter doctor --android-licenses
 
 RUN apt-get clean
 
