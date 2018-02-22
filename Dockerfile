@@ -1,6 +1,6 @@
 FROM ubuntu:17.04
 
-RUN apt-get update -qq && apt-get install -y apt-transport-https 
+RUN apt-get update && apt-get install -y apt-transport-https 
 
 # Dependencies to execute Android builds
 #RUN dpkg --add-architecture i386
