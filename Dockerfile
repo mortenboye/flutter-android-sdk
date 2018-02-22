@@ -68,6 +68,8 @@ RUN echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-googl
 RUN echo y | android update sdk --no-ui --all --filter extra-android-m2repository | grep 'package installed'
 RUN echo y | android update sdk --no-ui --all --filter extra-google-m2repository | grep 'package installed'
 
+yes | sdkmanager --licenses
+
 # Copy install tools
 COPY tools /opt/tools
 
