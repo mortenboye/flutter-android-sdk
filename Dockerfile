@@ -1,6 +1,7 @@
 FROM ubuntu:17.10
 
-RUN apt-get update && apt-get install -y apt-transport-https 
+RUN apt-get update -qq 
+#&& apt-get install -y apt-transport-https 
 
 # Dependencies to execute Android builds
 #RUN dpkg --add-architecture i386
@@ -88,6 +89,6 @@ ENV PATH=$PATH:/opt/flutter/bin
 
 RUN apt-get clean
 
-RUN flutter doctor --android-licenses
+#RUN flutter doctor --android-licenses
 
 VOLUME ["/opt/android-sdk-linux"]
